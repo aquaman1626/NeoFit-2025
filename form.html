@@ -1,0 +1,131 @@
+<create_file>
+<path>form.html</path>
+<content>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoFit 2025 - Input Your Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .glow {
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        .sensual-bg {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2e2e2e 100%);
+        }
+        .green-accent {
+            color: #4caf50;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body class="sensual-bg">
+    <div class="min-h-screen flex flex-col items-center justify-center p-8 fade-in">
+        <div class="w-full max-w-md bg-black bg-opacity-50 p-6 rounded-xl shadow-lg glow">
+            <h2 class="text-2xl font-semibold green-accent mb-4 text-center">Input Your Details</h2>
+            <form id="exerciseForm" class="space-y-4">
+                <div>
+                    <label for="weight" class="block text-sm font-medium text-gray-300">Weight (kg)</label>
+                    <input type="number" id="weight" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" min="30" max="200">
+                </div>
+                <div>
+                    <label for="height" class="block text-sm font-medium text-gray-300">Height (cm)</label>      
+                    <input type="number" id="height" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" min="120" max="250">
+                </div>
+                <div>
+                    <label for="age" class="block text-sm font-medium text-gray-300">Age</label>      
+                    <input type="number" id="age" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" min="16" max="100">
+                </div>
+                <div>
+                    <label for="bodyType" class="block text-sm font-medium text-gray-300">Body Type</label>      
+                    <select id="bodyType" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Select...</option>
+                        <option value="ectomorph">Ectomorph (Lean, hard to gain muscle)</option>
+                        <option value="mesomorph">Mesomorph (Muscular, easy to build)</option>
+                        <option value="endomorph">Endomorph (Softer, prone to fat storage)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="fitnessLevel" class="block text-sm font-medium text-gray-300">Fitness Level</label>
+                    <select id="fitnessLevel" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Select...</option>
+                        <option value="beginner">Beginner (New to fitness or low experience)</option>
+                        <option value="intermediate">Intermediate (Some experience, moderate fitness)</option>
+                        <option value="advanced">Advanced (Highly experienced, intense workouts)</option>
+                    </select>   
+                </div>
+                <div>
+                    <label for="goals" class="block text-sm font-medium text-gray-300">Goals</label>
+                    <select id="goals" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Select...</option>
+                        <option value="weightloss">Weight Loss</option>
+                        <option value="musclegain">Muscle Gain</option>
+                        <option value="endurance">Endurance Building</option>
+                        <option value="general">General Fitness</option>
+                        <option value="stressrelief">Stress Relief & Flexibility</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="duration" class="block text-sm font-medium text-gray-300">Duration</label>
+                    <select id="duration" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="7days">7 Days</option>
+                        <option value="14days">14 Days</option>
+                        <option value="1month">1 Month</option>
+                        <option value="3months">3 Months</option>
+                        <option value="6months">6 Months</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-300 glow">Generate My Plan</button>
+            </form>
+            <a href="index.html" class="mt-4 block text-center text-gray-400 hover:text-white">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('exerciseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                weight: parseInt(document.getElementById('weight').value),
+                height: parseInt(document.getElementById('height').value),
+                age: parseInt(document.getElementById('age').value),
+                bodyType: document.getElementById('bodyType').value,
+                fitnessLevel: document.getElementById('fitnessLevel').value,
+                goals: document.getElementById('goals').value,
+                duration: document.getElementById('duration').value
+            };
+
+            // Calculate temporary data for storage
+            const bmi = data.weight / ((data.height / 100) ** 2);
+            let intensity = data.fitnessLevel === 'beginner' ? 'gentle' : data.fitnessLevel === 'intermediate' ? 'moderate' : 'intense';
+            if (bmi < 18.5 && intensity !== 'gentle') intensity = 'moderate';
+            else if (bmi > 25 && intensity !== 'intense') intensity = 'intense';
+
+            data.bmi = bmi;
+            data.intensity = intensity;
+
+            // Store in localStorage
+            localStorage.setItem('neofitData', JSON.stringify(data));
+
+            // Redirect to plan page
+            window.location.href = 'plan.html';
+        });
+    </script>
+</body>
+</html>
+</content>
+</create_file>
