@@ -1,0 +1,243 @@
+<create_file>
+<path>plan.html</path>
+<content>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoFit 2025 - Your Personalized Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .glow {
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        .sensual-bg {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2e2e2e 100%);
+        }
+        .green-accent {
+            color: #4caf50;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+            vertical-align: top;
+        }
+        th {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+        .exercise-list {
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 4px;
+            margin: 0;
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        #downloadBtn {
+            margin-top: 1rem;
+            background-color: #4caf50;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        #downloadBtn:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body class="sensual-bg">
+    <div class="min-h-screen flex flex-col items-center justify-center p-8 fade-in">
+        <div class="w-full max-w-4xl bg-black bg-opacity-50 p-6 rounded-xl shadow-lg glow">
+            <!-- Added Image Here -->
+            <div class="hero-image mb-6">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/61445557-2e3a-476e-8fea-7f21e0e31d3a.png" alt="Futuristic dark room with neon green lights casting sensual shadows on sleek gym equipment, evoking a 2025 cyber-fitness atmosphere with glowing monitors displaying personalized exercise data and a mysterious silhouette engaging in elegant yoga poses" class="w-full h-64 object-cover rounded-lg shadow-2xl"/>
+            </div>
+            <!-- End Added Image -->
+            <h2 class="text-2xl font-semibold green-accent mb-4 text-center">Your Personalized Exercise Plan</h2>
+            <div id="plan" class="text-gray-300 space-y-4"></div>
+            <button id="downloadBtn" class="glow" title="Download plan as PDF">
+                <i class="fa fa-file-pdf"></i> Download Plan as PDF
+            </button>
+            <a href="form.html" class="mt-4 block text-center text-gray-400 hover:text-white">Adjust Inputs</a>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const data = JSON.parse(localStorage.getItem('neofitData'));
+            if (!data) {
+                window.location.href = 'form.html';
+                return;
+            }
+            
+            const { weight, height, age, bodyType, fitnessLevel, goals, duration, bmi, intensity } = data;
+            
+            // Duration setup
+            let planDuration;
+            let days = 0;
+            if (duration === '7days') { planDuration = 'one week'; days = 7; }
+            else if (duration === '14days') { planDuration = 'two weeks'; days = 14; }
+            else if (duration === '1month') { planDuration = 'one month'; days = 28; }
+            else if (duration === '3months') { planDuration = 'three months'; days = 84; }
+            else { planDuration = 'six months'; days = 168; }
+
+            // Body type and goals flair
+            let bodyFlair = '';
+            if (bodyType === 'ectomorph' && goals === 'musclegain') bodyFlair = 'Focused on muscle building: Emphasize compound lifts with higher calories.';
+            else if (bodyType === 'endomorph' && goals === 'weightloss') bodyFlair = 'Fat-burning mode: High-intensity intervals with caloric deficit.';
+            else if (goals === 'stressrelief') bodyFlair = 'Mind-body harmony: Gentle flows for inner peace.';
+
+            // Exercises
+            const exerciseLibrary = {
+                gentle: {
+                    musclegain: [
+                        { name: 'Bio-Enhanced Squats', sets: 3, reps: '8-10', duration: 10 },
+                        { name: 'Quantum Chair Lifts', sets: 3, reps: '10-12', duration: 15 },
+                        { name: 'Aura Push-Ups', sets: 3, reps: '8', duration: 10 }
+                    ],
+                    weightloss: [
+                        { name: 'Neon Walk Ritual', sets: 1, reps: 'Continuous', duration: 20 },
+                        { name: 'Biodynamic Arm Circles', sets: 3, reps: '15 each', duration: 10 },
+                        { name: 'Harmonic Breathing Holds', sets: 2, reps: '5 holds', duration: 15 }
+                    ],
+                    endurance: [
+                        { name: 'Guided Endurance Pace', sets: 1, reps: 'Smooth', duration: 25 },
+                        { name: 'Gentle Pulse Circuits', sets: 4, reps: '20 sec each', duration: 20 }
+                    ],
+                    general: [
+                        { name: 'Breathing Ritual Sessions', sets: 1, reps: 'Deep', duration: 15 },
+                        { name: 'Sensual Yoga Flows', sets: 1, reps: 'Flow', duration: 20 }
+                    ],
+                    stressrelief: [
+                        { name: 'Guided Meditation Walks', sets: 1, reps: 'Mindful', duration: 25 },
+                        { name: 'Aura Cleansing Stretches', sets: 3, reps: 'Hold 20 sec', duration: 15 }
+                    ]
+                },
+                moderate: {
+                    musclegain: [
+                        { name: 'Adaptive Strength Squats', sets: 4, reps: '10-12', duration: 15 },
+                        { name: 'Biomech Deadlifts', sets: 4, reps: '8', duration: 15 },
+                        { name: 'Neural Push-Pulls', sets: 3, reps: '12 each', duration: 20 }
+                    ],
+                    weightloss: [
+                        { name: 'Quantum Cardio Burst', sets: 4, reps: '30 sec sprint', duration: 20 },
+                        { name: 'Fat-Melt Jumps', sets: 3, reps: '15', duration: 10 },
+                        { name: 'BHg-iCircuits', sets: 3, reps: 'Circuit', duration: 15 }
+                    ],
+                    endurance: [
+                        { name: 'Endurance Grid Runs', sets: 1, reps: '30 min', duration: 30 },
+                        { name: 'Harmonic Pulse Cycles', sets: 2, reps: '15 min', duration: 30 }
+                    ],
+                    general: [
+                        { name: 'Harmonic Pilates Fusion', sets: 1, reps: 'Sequence', duration: 25 },
+                        { name: 'Adaptive Core Harmonies', sets: 3, reps: '20', duration: 20 }
+                    ],
+                    stressrelief: [
+                        { name: 'Mindful Flow Sequences', sets: 1, reps: 'Flow', duration: 20 },
+                        { name: 'Aura Balancing Twists', sets: 3, reps: '10 each', duration: 15 }
+                    ]
+                },
+                intense: {
+                    musclegain: [
+                        { name: 'Cyber Hypertrophy Squats', sets: 5, reps: '6-8', duration: 20 },
+                        { name: 'Power Lift Bursts', sets: 5, reps: '5', duration: 20 },
+                        { name: 'Quantum Pull-Up Circuits', sets: 4, reps: '10', duration: 15 }
+                    ],
+                    weightloss: [
+                        { name: 'Aero-Thrust HIIT', sets: 5, reps: '45 sec max', duration: 25 },
+                        { name: 'Quantum Fat Blaster', sets: 4, reps: '30-45 sec', duration: 20 }
+                    ],
+                    endurance: [
+                        { name: 'Cyber Marathon Sim', sets: 1, reps: 'Full', duration: 60 },
+                        { name: 'Hyper-Pulse Sprints', sets: 6, reps: '1 min', duration: 30 }
+                    ],
+                    general: [
+                        { name: 'Quantum Burst Workouts', sets: 6, reps: '10-15', duration: 40 },
+                        { name: 'Neon Velocity Circuits', sets: 5, reps: 'Circuit', duration: 35 }
+                    ],
+                    stressrelief: [
+                        { name: 'Intense Flow Releases', sets: 1, reps: 'Dynamic', duration: 30 },
+                        { name: 'Dynamic Balance Drills', sets: 4, reps: '20 sec', duration: 25 }
+                    ]
+                }
+            };
+
+            const exercises = exerciseLibrary[intensity][goals] || exerciseLibrary[intensity].general;
+
+            // Generate table
+            let planHTML = `<p class="text-lg">Based on your inputs (Weight: ${weight}kg, Height: ${height}cm, Age: ${age}, BMI: ${bmi.toFixed(1)}, Body Type: ${bodyType}, Fitness Level: ${fitnessLevel}, Goals: ${goals}), we've crafted a <strong>${intensity}</strong> intensity plan for <strong>${planDuration}</strong>.</p>`;
+            planHTML += bodyFlair ? `<p class="green-accent">${bodyFlair}</p>` : '';
+            planHTML += `<h3 class="text-xl green-accent">Your Exercise Routine Summary:</h3>`;
+            planHTML += `<div class="table-container"><table class="text-gray-300"><thead><tr><th class="green-accent">Period</th><th class="green-accent">Exercises Summary</th><th class="green-accent">Total Duration</th></tr></thead><tbody>`;
+
+            // Simplified rows
+            if (days === 7 || days === 14) {
+                let totalDuration = exercises.reduce((sum, ex) => sum + ex.duration, 0);
+                let exerciseSummary = '<ul class="exercise-list">';
+                exercises.forEach(ex => {
+                    exerciseSummary += `<li><strong>${ex.name}:</strong> ${ex.sets} sets x ${ex.reps}</li>`;
+                });
+                exerciseSummary += '</ul>';
+                planHTML += `<tr><td>Daily</td><td>${exerciseSummary}</td><td>${totalDuration} min</td></tr>`;
+            } else {
+                // For longer durations, weekly progression
+                let totalDuration1 = exercises.reduce((sum, ex) => sum + ex.duration, 0);
+                let exSummary1 = exercises.slice(0, 2).map(ex => `<li><strong>${ex.name}:</strong> ${ex.sets} sets x ${ex.reps}</li>`).join('');
+                let exSummary2 = exercises.map(ex => `<li><strong>${ex.name}:</strong> ${ex.sets + 1} sets x ${ex.reps} (advanced)</li>`).join('');
+                planHTML += `<tr><td>Week 1-2</td><td><ul class="exercise-list">${exSummary1}</ul></td><td>${totalDuration1} min</td></tr>`;
+                planHTML += `<tr><td>Week 3+</td><td><ul class="exercise-list">${exSummary2}</ul></td><td>${totalDuration1 + 10} min</td></tr>`;
+            }
+
+            planHTML += `</tbody></table></div>`;
+            planHTML += `<p class="mt-4">Remember, NeoFit 2025 uses advanced AI for real-time adjustments. Warm up first, hydrate, and consult a professional if needed.</p>`;
+
+            document.getElementById('plan').innerHTML = planHTML;
+        });
+
+        // PDF Download
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            const planText = document.getElementById('plan').innerText;
+            const lines = pdf.splitTextToSize(planText, 180);
+            pdf.text(lines, 10, 20);
+            pdf.save('Neofit2025_Exercise_Plan.pdf');
+        });
+    </script>
+</body>
+</html>
+</content>
+</create_file>
